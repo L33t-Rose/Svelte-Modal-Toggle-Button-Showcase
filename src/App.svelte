@@ -1,17 +1,10 @@
 <script>
-  import Button from "./Button.svelte";
   import Demo from "./Demo.svelte";
-  import CloseIcon from "./CloseIcon.svelte";
-  import Test from "./Test.svelte";
-  function test(node, { selector = "body", condition = false }) {
-    console.log(selector, node, document.querySelector(selector));
-    if (condition) {
-      document.querySelector(selector).appendChild(node);
-    }
-  }
+  import PortalDemo from "./PortalDemo.svelte";
+  import {portal} from "./util";
 </script>
 
-<svelte:body use:test={{ selector: "body" }} />
+<svelte:body use:portal={{ selector: "body" }} />
 <h1 style="margin:0">Made By Junior</h1>
 <p>
   Wanted to explore a pattern in which we can use a button to trigger any
@@ -24,8 +17,10 @@
   it'd be cool to replicate them in svelte.
 </p>
 <Demo />
-Wanted to try out the button but make it so the conent shows up somewhere else
-<div style="flex">
+<PortalDemo/>
+
+<!-- Wanted to try out the button but make it so the conent shows up somewhere else -->
+<!-- <div id="button-bar" style="flex">
   <Button
     id="junior"
     label="Junior"
@@ -34,7 +29,7 @@ Wanted to try out the button but make it so the conent shows up somewhere else
     let:toggle
     --border="1px solid"
   >
-    <div class="modal" use:test={{ selector: "#portal", condition: pressed }}>
+    <div class="modal" use:portal={{ selector: "#portal", condition: pressed }}>
       <div>
         <button class="close" on:click={toggle}><CloseIcon /></button>
         Junior
@@ -49,7 +44,7 @@ Wanted to try out the button but make it so the conent shows up somewhere else
     let:toggle
     --border="1px solid"
   >
-    <div class="modal" use:test={{ selector: "#portal", condition: pressed }}>
+    <div class="modal" use:portal={{ selector: "#portal", condition: pressed }}>
       <div>
         <button class="close" on:click={toggle}><CloseIcon /></button>
         Was
@@ -64,8 +59,8 @@ Wanted to try out the button but make it so the conent shows up somewhere else
     let:toggle
     --border="1px solid"
   >
-    <div class="modal" use:test={{ selector: "#portal", condition: pressed }}>
-      <div>
+    <div class="modal" use:portal={{ selector: "#portal", condition: pressed }}>
+      <div class="modal-content">
         <button class="close" on:click={toggle}><CloseIcon /></button>
         Here
       </div>
@@ -73,7 +68,37 @@ Wanted to try out the button but make it so the conent shows up somewhere else
   </Button>
 </div>
 <div id="portal" />
-<Test action={test} parameters={{ selector: "#portal", condition: true }} />
+<Test action={portal} parameters={{ selector: "#portal", condition: true }} />
+<Button let:pressed let:toggle>
+  <Modal
+    action={portal}
+    close={toggle}
+    parameters={{ selector: "body", condition: pressed }}
+  >
+    <div class="modal-content">
+      <button class="close" on:click={toggle}><CloseIcon /></button>
+      Here
+      <Button let:pressed --border="1px solid black" --borderRadius="0.5em">
+        {pressed}
+        <div
+          use:portal={{ selector: ".modal", condition: pressed }}
+          style="color:white; padding:1em; width:100%;"
+        >
+          Surely this works
+        </div>
+      </Button>
+    </div>
+  </Modal>
+</Button>
+<Button label="Transition?" let:pressed>
+  <div
+    use:portal={{ selector: "#portal", condition: pressed }}
+    transition:fade={pressed}
+    style="background:coral; padding:1em"
+  >
+    Yes
+  </div>
+</Button>
 
 <style>
   #portal {
@@ -93,14 +118,16 @@ Wanted to try out the button but make it so the conent shows up somewhere else
     justify-content: center;
     align-items: center;
   }
-  .modal div {
+  div.modal-content {
     width: 75%;
-    height: 100px;
+    /* height: 100px; */
     position: relative;
     background: white;
     color: black;
+    padding: 1em;
+    border-radius: 1em;
   }
-  .modal div button.close {
+  div.modal-content button.close {
     all: initial;
     position: absolute;
     right: -0.5em;
@@ -114,10 +141,11 @@ Wanted to try out the button but make it so the conent shows up somewhere else
     cursor: pointer;
   }
   :global(#junior, #was, #here) {
+    --borderRadius: 1em 1em 0 0;
     margin: 0;
     border-style: solid solid none solid;
   }
   :global(#junior:focus, #was:focus, #here:focus) {
     border-width: 2px;
   }
-</style>
+</style> -->

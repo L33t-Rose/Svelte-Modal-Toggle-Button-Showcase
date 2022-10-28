@@ -6,6 +6,6 @@
 
 {#if action}
 <div class="sure" use:action={parameters}>
-	Test
+	Test should teleport into #portal
 </div>
 {/if}
