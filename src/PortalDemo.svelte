@@ -9,15 +9,15 @@
   import { onMount } from "svelte";
   let count = 0;
   let loaded = false;
+  if (!localStorage.getItem("showOnPageLoad")) {
+    localStorage.setItem("showOnPageLoad", true);
+  }
   onMount(() => {
     loaded = true;
   });
 </script>
 
-<p style="margin:0;" use:portal={{ condition: true, moveToTop: true }}>
-  Using portal action to move this to the top of the body.<br />
-  This is paragraph is inside of PortalDemo.svelte
-</p>
+
 
 <!-- Button Bar that when a button is pressed will teleport it's content to a different div with id "portal" -->
 <div id="button-bar" style="flex">
@@ -94,10 +94,35 @@
 </Button>
 
 <Button
-  bypass={JSON.parse(localStorage.getItem("showOnPageLoad")) ?? false}
-  label="Transition?"
+  label="Will transitions work?"
   let:pressed
   let:toggle
+  --border="1px solid #ef4444"
+>
+  <div
+    use:portal={{
+      selector: "#portal",
+      condition: pressed,
+    }}
+    transition:slide={{ duration: 1000 }}
+    style="background:#ef4444; width:75%; margin:0 auto; border-radius:1em; color:white; padding:1em; display:flex; justify-content:space-between; align-items:center;"
+  >
+    Yes it does! This is using svelte's slide transition!
+    <button
+      on:click={toggle}
+      style="width:2em; height:2em; cursor:pointer; border-radius: 50%; padding:0; margin:0; border:none; margin:0; background:transparent;"
+    >
+      <CloseIcon />
+    </button>
+  </div>
+</Button>
+
+<Button
+  bypass={JSON.parse(localStorage.getItem("showOnPageLoad")) ?? false}
+  label="Is there a way to show the content On Page Load?"
+  let:pressed
+  let:toggle
+  --border="1px solid black"
 >
   {#if loaded}
     <div
@@ -105,11 +130,17 @@
         selector: "#portal",
         condition: pressed,
       }}
-      transition:slide={{duration:1000}}
-      style="background:#ef4444; width:75%; margin:0 auto; border-radius:1em; color:white; padding:1em; display:flex; justify-content:space-between; align-items:center;"
+      transition:slide={{ duration: 1000 }}
+      style="background:black; width:75%; margin:0 auto; border-radius:1em; color:white; padding:1em; display:flex; justify-content:space-between; align-items:center;"
     >
-      This should fade into #portal {count}
-      <Counter bind:count />
+      <p style="flex:1;">
+        Yes it does! There is a bypass prop that you can use so that your
+        content will show. The close button still works too! This one is using
+        localStorage. Go into localStorage and change <span
+          style="font-weight:bold; margin:0;">showOnPageLoad</span
+        >
+        to false
+      </p>
       <button
         on:click={toggle}
         style="width:2em; height:2em; cursor:pointer; border-radius: 50%; padding:0; margin:0; border:none; margin:0; background:transparent;"
@@ -120,24 +151,43 @@
   {/if}
 </Button>
 
+<p style="margin:0;" use:portal={{ condition: true, moveToTop: true }}>
+  Using portal action to move this to the top of the body.<br />
+  This is paragraph is inside of PortalDemo.svelte at the bottom
+</p>
+
+<Button
+  label="Can I use components that use Javascript?"
+  let:pressed
+  let:toggle
+  --border="1px solid green"
+>
+  <div
+    use:portal={{
+      selector: "#portal",
+      condition: pressed,
+    }}
+    transition:slide={{ duration: 1000 }}
+    style="background:green; width:75%; margin:0 auto; border-radius:1em; color:white; padding:1em; display:flex; justify-content:space-between; align-items:center;"
+  >
+    Of course! Here! Have a free counter! {count} click{"(s)"}
+    <Counter bind:count />
+    <button
+      on:click={toggle}
+      style="width:2em; height:2em; cursor:pointer; border-radius: 50%; padding:0; margin:0; border:none; margin:0; background:transparent;"
+    >
+      <CloseIcon />
+    </button>
+  </div>
+</Button>
+
 <style>
   #portal {
     border: 1px solid black;
-    height: 200px;
+    min-height: 200px;
     position: relative;
   }
-  .modal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.8);
-    width: 100%;
-    height: 100%;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+
   div.modal-content {
     width: 75%;
     /* height: 100px; */

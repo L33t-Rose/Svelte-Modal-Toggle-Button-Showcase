@@ -1,9 +1,8 @@
-<script lang="ts">
+<script>
 	export let id="test";
 	export let bypass = false;
-	let pressed = bypass;
 	export let label = "Click Button";
-	console.log("showOnPageLoad",localStorage.getItem("showOnPageLoad"));
+	let pressed = bypass;
 	function toggle(){pressed = !pressed}
 </script>
 
