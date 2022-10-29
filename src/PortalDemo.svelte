@@ -1,15 +1,22 @@
 <script>
   import { portal } from "./util";
-  import { fade } from "svelte/transition";
+  import { fade, fly, slide } from "svelte/transition";
   import Button from "./Button.svelte";
   import CloseIcon from "./CloseIcon.svelte";
   import Test from "./Test.svelte";
   import Modal from "./Modal.svelte";
+  import Counter from "./Counter.svelte";
+  import { onMount } from "svelte";
+  let count = 0;
+  let loaded = false;
+  onMount(() => {
+    loaded = true;
+  });
 </script>
 
 <p style="margin:0;" use:portal={{ condition: true, moveToTop: true }}>
-  Using portal action to move this to the top of the body. This is paragraph is
-  inside of PortalDemo.svelte
+  Using portal action to move this to the top of the body.<br />
+  This is paragraph is inside of PortalDemo.svelte
 </p>
 
 <!-- Button Bar that when a button is pressed will teleport it's content to a different div with id "portal" -->
@@ -52,12 +59,16 @@
     let:toggle
     --border="1px solid"
   >
-    <div class="modal" use:portal={{ selector: "#portal", condition: pressed }}>
+    <Modal
+      close={toggle}
+      action={portal}
+      parameters={{ selector: "#portal", condition: pressed }}
+    >
       <div class="modal-content">
         <button class="close" on:click={toggle}><CloseIcon /></button>
         Here
       </div>
-    </div>
+    </Modal>
   </Button>
 </div>
 <div id="portal" />
@@ -82,20 +93,31 @@
   </Modal>
 </Button>
 
-<Button label="Transition?" let:pressed let:toggle>
-  <div
-    use:portal={{ selector: "#portal", condition: pressed }}
-    transition:fade={pressed}
-    style="background:#ef4444; width:75%; margin:0 auto; border-radius:1em; color:white; padding:1em; display:flex; justify-content:space-between; align-items:center;"
-  >
-    This should fade into #portal
-    <button
-      on:click={toggle}
-      style="width:2em; height:2em; cursor:pointer; border-radius: 50%; padding:0; margin:0; border:none; margin:0; background:transparent;"
+<Button
+  bypass={JSON.parse(localStorage.getItem("showOnPageLoad")) ?? false}
+  label="Transition?"
+  let:pressed
+  let:toggle
+>
+  {#if loaded}
+    <div
+      use:portal={{
+        selector: "#portal",
+        condition: pressed,
+      }}
+      transition:slide={{duration:1000}}
+      style="background:#ef4444; width:75%; margin:0 auto; border-radius:1em; color:white; padding:1em; display:flex; justify-content:space-between; align-items:center;"
     >
-      <CloseIcon />
-    </button>
-  </div>
+      This should fade into #portal {count}
+      <Counter bind:count />
+      <button
+        on:click={toggle}
+        style="width:2em; height:2em; cursor:pointer; border-radius: 50%; padding:0; margin:0; border:none; margin:0; background:transparent;"
+      >
+        <CloseIcon />
+      </button>
+    </div>
+  {/if}
 </Button>
 
 <style>

@@ -1,7 +1,9 @@
 <script lang="ts">
 	export let id="test";
-	let pressed = false;
+	export let bypass = false;
+	let pressed = bypass;
 	export let label = "Click Button";
+	console.log("showOnPageLoad",localStorage.getItem("showOnPageLoad"));
 	function toggle(){pressed = !pressed}
 </script>
 
@@ -10,7 +12,7 @@
 </button>
 
 {#if pressed}
-	<slot pressed={pressed} toggle={toggle}/>
+	<slot pressed={pressed} toggle={toggle} bypass={bypass}/>
 {/if}
 
 <style>
