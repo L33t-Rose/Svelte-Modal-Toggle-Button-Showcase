@@ -17,8 +17,6 @@
   });
 </script>
 
-
-
 <!-- Button Bar that when a button is pressed will teleport it's content to a different div with id "portal" -->
 <div id="button-bar" style="flex">
   <Button
@@ -29,27 +27,35 @@
     let:toggle
     --border="1px solid"
   >
-    <div class="modal" use:portal={{ selector: "#portal", condition: pressed }}>
+    <Modal
+      action={portal}
+      parameters={{ selector: "#portal", condition: pressed }}
+      close={toggle}
+    >
       <div class="modal-content">
         <button class="close" on:click={toggle}><CloseIcon /></button>
         Junior
       </div>
-    </div>
+    </Modal>
   </Button>
   <Button
     id="was"
     label="Was"
     let:pressed
-    --display
     let:toggle
+    --display
     --border="1px solid"
   >
-    <div class="modal" use:portal={{ selector: "#portal", condition: pressed }}>
+    <Modal
+      action={portal}
+      parameters={{ selector: "#portal", condition: pressed }}
+      close={toggle}
+    >
       <div class="modal-content">
         <button class="close" on:click={toggle}><CloseIcon /></button>
         Was
       </div>
-    </div>
+    </Modal>
   </Button>
   <Button
     id="here"
