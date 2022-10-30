@@ -12,6 +12,8 @@
   }
 </script>
 
+<!-- <svelte:body style="overflow:hidden;" /> -->
+
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- <div class="modal-background" on:click={close}/> -->
 <div
