@@ -1,5 +1,5 @@
 <script>
-  import { portal } from "./util";
+  import { portal, highlightOnHover } from "./util";
   import { fade, fly, slide } from "svelte/transition";
   import Button from "./Button.svelte";
   import CloseIcon from "./CloseIcon.svelte";
@@ -31,6 +31,7 @@
       action={portal}
       parameters={{ selector: "#portal", condition: pressed }}
       close={toggle}
+      absolute
     >
       <div class="modal-content">
         <button class="close" on:click={toggle}><CloseIcon /></button>
@@ -50,6 +51,7 @@
       action={portal}
       parameters={{ selector: "#portal", condition: pressed }}
       close={toggle}
+      absolute
     >
       <div class="modal-content">
         <button class="close" on:click={toggle}><CloseIcon /></button>
@@ -61,14 +63,15 @@
     id="here"
     label="Here"
     let:pressed
-    --display
     let:toggle
+    --display
     --border="1px solid"
   >
     <Modal
       close={toggle}
       action={portal}
       parameters={{ selector: "#portal", condition: pressed }}
+      absolute
     >
       <div class="modal-content">
         <button class="close" on:click={toggle}><CloseIcon /></button>
@@ -77,6 +80,7 @@
     </Modal>
   </Button>
 </div>
+
 <div id="portal" />
 
 <Test action={portal} parameters={{ selector: "#portal", condition: true }} />
@@ -124,6 +128,7 @@
 </Button>
 
 <Button
+  id="test-hover"
   bypass={JSON.parse(localStorage.getItem("showOnPageLoad")) ?? false}
   label="Is there a way to show the content On Page Load?"
   let:pressed
@@ -139,14 +144,21 @@
       transition:slide={{ duration: 1000 }}
       style="background:black; width:75%; margin:0 auto; border-radius:1em; color:white; padding:1em; display:flex; justify-content:space-between; align-items:center;"
     >
-      <p style="flex:1;">
-        Yes it does! There is a bypass prop that you can use so that your
-        content will show. The close button still works too! This one is using
-        localStorage. Go into localStorage and change <span
-          style="font-weight:bold; margin:0;">showOnPageLoad</span
+      <div style="flex:1">
+        <b style="font-size:large; margin:0;"
+          >Can I make my content show on Page Load?</b
         >
-        to false
-      </p>
+        <p>
+          Yes you can! There is a bypass prop that you can use so that your
+          content will show. The close button and the <span
+            use:highlightOnHover={"#test-hover"}
+            style="cursor:pointer; font-weight:bolder">toggle button</span
+          >
+          works too! This one is using localStorage. Go into localStorage and change
+          <span style="font-weight:bold; margin:0;">showOnPageLoad</span>
+          to false.
+        </p>
+      </div>
       <button
         on:click={toggle}
         style="width:2em; height:2em; cursor:pointer; border-radius: 50%; padding:0; margin:0; border:none; margin:0; background:transparent;"
